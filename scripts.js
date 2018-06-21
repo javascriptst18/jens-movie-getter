@@ -1,10 +1,19 @@
 let postArray = [];
+let arrayLength = 0;
 let postCounter = 0;
 let postsContainer = document.querySelector('#postsContainer');
-let loadButton = `<div class="button-container"><button id="loadButton" class="load-button">Ladda fler filmer</button></div>`;
+let buttonContainer = document.querySelector('#buttonContainer');
+let loadButton = `<button id="loadButton" class="load-button">Ladda fler filmer</button>`;
+let form = document.querySelector("#searchForm");
 
 function createPosts() {
-    for (let i = postCounter; i < postCounter + 10; i += 1) {
+    if ((postCounter + 10) >= arrayLength) {
+        addCount = arrayLength;
+        document.querySelector("#loadButton").disabled = "true";
+    } else {
+        addCount = 10;
+    }
+    for (let i = postCounter; i < postCounter + addCount; i += 1) {
         let postObject = `
         <div class="movie">
         <img src="${postArray[i].poster}">
@@ -14,19 +23,34 @@ function createPosts() {
         </div>`;
         postsContainer.insertAdjacentHTML('beforeend', postObject);
     }
-    postCounter = postCounter + 10;
+    postCounter = postCounter + addCount;
 }
 
-$.getJSON("https://javascriptst18.herokuapp.com/trending", function (response) {
-    for (let item of response) {
-        postArray.push(item);
-    }
-    createPosts();
-    postsContainer.insertAdjacentHTML('afterend', loadButton);
-});
+function fetchPosts(searchTerm) {
+    $.getJSON(`https://javascriptst18.herokuapp.com/trending${searchTerm ? '?title_like=' + searchTerm : ""}`, function (response) {
+        postArray = response;
+        arrayLength = response.length;
+        createPosts();
+    })
+}
 
 document.addEventListener('click', function (e) {
     if (e.target.id === "loadButton") {
         createPosts();
     }
-})
+});
+
+searchForm.addEventListener('submit', function (e) {
+    e.preventDefault();
+    postCounter = 0;
+    let inputValue = this.querySelector("#searchTerm").value;
+    if (inputValue) {
+        postsContainer.innerHTML = '';
+        fetchPosts(inputValue);
+        buttonContainer.innerHTML = loadButton;
+    } else {
+        postsContainer.innerHTML = '';
+        fetchPosts();
+        buttonContainer.innerHTML = loadButton;
+    }
+});

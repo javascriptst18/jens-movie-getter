@@ -12,7 +12,15 @@
 
 <body>
     <h1>Bra filmer, direkt från internet:</h1>
+    <div class="search-form">
+        <form id="searchForm">
+            <label for="searchTerm">Vilken film söker du?</label>
+            <input type="text" name="search-term" id="searchTerm" placeholder="Ange filmtitel...">
+            <button type="submit" id="searchButton">Sök!</button>
+        </form>
+    </div>
     <div id="postsContainer" class="posts-container"></div>
+    <div class="button-container" id="buttonContainer"></div>
     <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js'></script>
     <script src="scripts.js"></script>
 </body>
