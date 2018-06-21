@@ -115,3 +115,7 @@ button:disabled:hover {
     cursor: initial;
     opacity: 1;
 }
+
+.error-message {
+    color: red;
+}
