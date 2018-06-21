@@ -72,21 +72,33 @@ label {
     justify-content: space-between;
 }
 
-.movie {
+.movie-container {
     width: 48%;
-    overflow: hidden;
+    margin-bottom: 40px;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    background: transparent;
+}
+
+.movie {
     background-color: #fff;
+    -webkit-box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    -moz-box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    box-shadow: 0px 2px 8px 0px rgba(0, 0, 0, 0.2);
+    z-index: 2;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+}
+
+.movie p {
     padding: 12px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
-    -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.2);
 }
 
 .movie img {
     float: left;
-    margin: 0 20px 20px 0;
+    margin: 0 20px 0 0;
+    border-top-left-radius: 5px;
 }
 
 .button-container,
@@ -121,4 +133,34 @@ button:disabled:hover {
 
 .error-message {
     color: red;
+}
+
+.also-liked {
+    background-color: #ddd;
+    border-bottom-left-radius: 5px;
+    border-bottom-right-radius: 5px;
+    padding: 12px;
+    margin: auto;
+    height: 100%;
+    width: 94%;
+    z-index: 1;
+    -webkit-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
+    -moz-box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: 0px 0px 8px 0px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-size: .8rem;
+}
+
+h5 {
+    margin: 0;
+    font-size: .8rem;
+    text-align: center;
+}
+
+.also-liked a {
+    color: #666;
+}
+
+.also-liked a:hover {
+    color: #333;
 }

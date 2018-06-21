@@ -19,12 +19,27 @@ function createPosts() {
             addCount = 10;
         }
         for (let i = postCounter; i < postCounter + addCount; i += 1) {
+            let alsoLiked = [];
+            if (postArray[i].alsoLiked.length > 0) {
+                for (let likedItem of postArray[i].alsoLiked) {
+                    let link = `<a href="${likedItem.link}" target="_blank">${likedItem.title}</a>`;
+                    alsoLiked.push(link);
+                }
+            } else {
+                let noLikedMessage = "Vi hittade tyvärr inga relaterade filmer.";
+                alsoLiked.push(noLikedMessage);
+            }
             let postObject = `
+        <div class="movie-container">
         <div class="movie">
         <img src="${postArray[i].poster}">
         <h2>${postArray[i].title}</h2>
         ${postArray[i].originalTitle ? '<h4>Originaltitel: ' + postArray[i].originalTitle + "</h4>" : ""}
         <p>${postArray[i].summary}</p>
+        </div>
+        <div class="also-liked" id="alsoLiked"><h5>Gillade du den här filmen? Då måste du kolla in dessa:</h5>
+        ${alsoLiked.slice(0,2).join(' | ')}
+        </div>
         </div>`;
             postsContainer.insertAdjacentHTML('beforeend', postObject);
         }
