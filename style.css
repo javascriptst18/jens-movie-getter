@@ -164,3 +164,13 @@ h5 {
 .also-liked a:hover {
     color: #333;
 }
+
+@media (max-width:950px) {
+    .movie-container {
+        width: 500px;
+        max-width: 100%;
+    }
+    .posts-container {
+        justify-content: center;
+    }
+}
