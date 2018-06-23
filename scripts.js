@@ -14,6 +14,36 @@ let loadButton = `<button id="loadButton" class="load-button">Ladda fler filmer<
 let form = document.querySelector("#searchForm");
 // select the field for displaying search errors
 let errorField = document.querySelector("#errorMessage");
+// set up array for keeping track of favorites
+let favoriteArray = [];
+// Check if favorites are set in local storage
+if (localStorage.getItem("favorites")) {
+    favoriteArray = JSON.parse(localStorage.getItem("favorites"));
+}
+
+// Function for checking if local storage is available
+function storageAvailable(type) {
+    try {
+        var storage = window[type],
+            x = '__storage_test__';
+        storage.setItem(x, x);
+        storage.removeItem(x);
+        return true;
+    } catch (e) {
+        return e instanceof DOMException && (
+                // everything except Firefox
+                e.code === 22 ||
+                // Firefox
+                e.code === 1014 ||
+                // test name field too, because code might not be present
+                // everything except Firefox
+                e.name === 'QuotaExceededError' ||
+                // Firefox
+                e.name === 'NS_ERROR_DOM_QUOTA_REACHED') &&
+            // acknowledge QuotaExceededError only if there's something already stored
+            storage.length !== 0;
+    }
+}
 
 // Function for creating the posts
 function createPosts() {
@@ -38,13 +68,21 @@ function createPosts() {
                 let noLikedMessage = "Vi hittade tyvärr inga relaterade filmer.";
                 alsoLiked.push(noLikedMessage);
             }
-            // create the post object
+            // Set up the favorite heart
+            let favoriteHeart = '';
+            let checkFavorite = favoriteArray.indexOf(postArray[i].id);
+            if (storageAvailable('localStorage') && checkFavorite !== -1) { //If local storage is available and post is a favorite...
+                favoriteHeart = `<div class="favorite"><i class="far fa-heart fas"></i></div>`;
+            } else if (storageAvailable('localStorage')) { // ...else
+                favoriteHeart = `<div class="favorite"><i class="far fa-heart"></i></div>`;
+            }
+            // Create the post object
             let postObject = `
-        <div class="movie-container">
+        <div class="movie-container" data-id="${postArray[i].id}">
         <div class="movie">
         <img src="${postArray[i].poster}">
+        ${favoriteHeart}
         <h2>${postArray[i].title}</h2>
-        ${postArray[i].originalTitle ? '<h4>Originaltitel: ' + postArray[i].originalTitle + "</h4>" : ""}
         <p>${postArray[i].summary}</p>
         </div>
         <div class="also-liked" id="alsoLiked"><h5>Gillade du den här filmen? Då måste du kolla in dessa:</h5>
@@ -53,7 +91,7 @@ function createPosts() {
         </div>`;
             postsContainer.insertAdjacentHTML('beforeend', postObject); // append the post object to the DOM
         }
-        postCounter = postCounter + addCount; // add to counter for pagination
+        postCounter = postCounter + 10; // add to counter for pagination
     }
 }
 
@@ -70,11 +108,24 @@ function fetchPosts(searchTerm) {
     })
 }
 
-// listener for the load more posts button
+// document listener
 document.addEventListener('click', function (e) {
+    // listener for the load more posts button
     if (e.target.id === "loadButton") {
         errorMessage.innerHTML = '';
         createPosts();
+    }
+    // listener for the favorite hearts
+    if (e.target.classList.contains("fa-heart")) {
+        e.target.classList.toggle("fas"); // toggle between filled and unfilled heart
+        let favoriteId = e.target.parentElement.parentElement.parentElement.dataset.id; // get the id of the post
+        let checkFavorite = favoriteArray.indexOf(favoriteId); // check if id exists in the array of favorites
+        if (checkFavorite !== -1) { // if it does...
+            favoriteArray.splice(checkFavorite, 1); // ...remove it from the array
+        } else {
+            favoriteArray.push(favoriteId); // else add it to the array
+        }
+        localStorage.setItem("favorites", JSON.stringify(favoriteArray)); // add the array to local storage as a string
     }
 });
 
@@ -93,5 +144,6 @@ searchForm.addEventListener('submit', function (e) {
     }
     this.querySelector("#searchTerm").value = "";
 });
+
 
 fetchPosts();
