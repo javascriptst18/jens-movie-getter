@@ -25,9 +25,9 @@ function createPosts() {
             addCount = arrayLength;
             document.querySelector("#loadButton").disabled = "true";
         } else {
-            addCount = 10; // ...else set the counter to 10
+            addCount = postCounter + 10; // ...else set the counter to 10
         }
-        for (let i = postCounter; i < postCounter + addCount; i += 1) { // loop the posts
+        for (let i = postCounter; i < addCount; i += 1) { // loop the posts
             let alsoLiked = []; // set up an empty arary for the related posts
             if (postArray[i].alsoLiked.length > 0) { // if related posts exist...
                 for (let likedItem of postArray[i].alsoLiked) {
@@ -93,3 +93,5 @@ searchForm.addEventListener('submit', function (e) {
     }
     this.querySelector("#searchTerm").value = "";
 });
+
+fetchPosts();
