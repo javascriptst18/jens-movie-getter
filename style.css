@@ -21,6 +21,11 @@ h2,
 h4 {
     font-family: 'Montserrat', sans-serif;
     color: #222;
+    line-height: 1.2;
+}
+
+h2 {
+    margin-bottom: 0;
 }
 
 h4 {
@@ -72,6 +77,25 @@ label {
     justify-content: space-between;
 }
 
+.favorite {
+    float: right;
+    margin: 16px 12px 12px 26px;
+    font-size: 24px;
+    color: #999;
+}
+
+.favorite .fas {
+    color: #ED3431;
+}
+
+.favorite .far {
+    transition: .5s ease-in-out;
+}
+
+.favorite:hover {
+    cursor: pointer;
+}
+
 .movie-container {
     width: 48%;
     margin-bottom: 40px;
@@ -93,6 +117,7 @@ label {
 
 .movie p {
     padding: 12px;
+    margin-top: 0;
 }
 
 .movie img {
