@@ -96,6 +96,10 @@ label {
     cursor: pointer;
 }
 
+.stars {
+    color: #ffcc00;
+}
+
 .movie-container {
     width: 48%;
     margin-bottom: 40px;
