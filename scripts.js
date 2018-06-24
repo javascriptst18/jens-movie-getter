@@ -76,19 +76,35 @@ function createPosts() {
             } else if (storageAvailable('localStorage')) { // ...else
                 favoriteHeart = `<div class="favorite"><i class="far fa-heart"></i></div>`;
             }
+            let fiveStars = '<div class="stars">';
+            let rating = Math.round(postArray[i].rating); // Get the rating integer
+            for (j = 2; j <= rating; j += 2) {
+                fiveStars += `<i class="fas fa-star"></i>`;
+            }
+            if (rating % 2 != 0) {
+                fiveStars += `<i class="fas fa-star-half-alt"></i>`;
+            }
+            let remainingStars = 10 - rating;
+            if (remainingStars >= 2) {
+                for (k = 2; k <= 10 - rating; k += 2) {
+                    fiveStars += `<i class="far fa-star"></i>`;
+                }
+            }
+            fiveStars += '</div>';
             // Create the post object
             let postObject = `
-        <div class="movie-container" data-id="${postArray[i].id}">
-        <div class="movie">
-        <img src="${postArray[i].poster}">
-        ${favoriteHeart}
-        <h2>${postArray[i].title}</h2>
-        <p>${postArray[i].summary}</p>
-        </div>
-        <div class="also-liked" id="alsoLiked"><h5>Gillade du den här filmen? Då måste du kolla in dessa:</h5>
-        ${alsoLiked.slice(0,2).join(' | ')}
-        </div>
-        </div>`;
+            <div class="movie-container" data-id="${postArray[i].id}">
+            <div class="movie">
+            <img src="${postArray[i].poster}">
+            ${favoriteHeart}
+            <h2>${postArray[i].title}</h2>
+            ${fiveStars}
+            <p>${postArray[i].summary}</p>
+            </div>
+            <div class="also-liked" id="alsoLiked"><h5>Gillade du den här filmen? Då måste du kolla in dessa:</h5>
+            ${alsoLiked.slice(0,2).join(' | ')}
+            </div>
+            </div>`;
             postsContainer.insertAdjacentHTML('beforeend', postObject); // append the post object to the DOM
         }
         postCounter = postCounter + 10; // add to counter for pagination
