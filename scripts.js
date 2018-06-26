@@ -1,24 +1,34 @@
-// set up empty array for posts
-let postArray = [];
-// initial length of the array
-let arrayLength = 0;
-// prepare to count posts
-let postCounter = 0;
-// where to append the posts
-let postsContainer = document.querySelector('#postsContainer');
-// container for the load button
-let buttonContainer = document.querySelector('#buttonContainer');
-// create the load button
-let loadButton = `<button id="loadButton" class="load-button">Ladda fler filmer</button>`;
-// select the search form
-let form = document.querySelector("#searchForm");
-// select the field for displaying search errors
-let errorField = document.querySelector("#errorMessage");
-// set up array for keeping track of favorites
-let favoriteArray = [];
+// Namespace for DOM elements
+const domElements = {
+    // where to append the posts
+    postsContainer: document.querySelector('#postsContainer'),
+    // container for the load button
+    buttonContainer: document.querySelector('#buttonContainer'),
+    // select the search form
+    searchForm: document.querySelector("#searchForm"),
+    // select the field for displaying search errors
+    errorField: document.querySelector("#errorMessage"),
+    // get the header
+    header: document.querySelector('header'),
+    // create the load button
+    loadButton: `<button id="loadButton" class="load-button">Ladda fler filmer</button>`
+}
+
+// Namespace for default values
+const initialStates = {
+    // set up empty array for posts
+    postArray: [],
+    // initial length of the array
+    arrayLength: 0,
+    // prepare to count posts
+    postCounter: 0,
+    // set up array for keeping track of favorites
+    favoriteArray: []
+}
+
 // Check if favorites are set in local storage
 if (localStorage.getItem("favorites")) {
-    favoriteArray = JSON.parse(localStorage.getItem("favorites"));
+    initialStates.favoriteArray = JSON.parse(localStorage.getItem("favorites"));
 }
 
 // Function for checking if local storage is available
@@ -48,8 +58,8 @@ function storageAvailable(type) {
 // Function for creating the related posts
 function createRelatedPosts(i) {
     let alsoLiked = []; // set up an empty arary for the related posts
-    if (postArray[i].alsoLiked.length > 0) { // if related posts exist...
-        for (let likedItem of postArray[i].alsoLiked) {
+    if (initialStates.postArray[i].alsoLiked.length > 0) { // if related posts exist...
+        for (let likedItem of initialStates.postArray[i].alsoLiked) {
             let link = `<a href="${likedItem.link}" target="_blank">${likedItem.title}</a>`;
             alsoLiked.push(link);
         }
@@ -62,7 +72,7 @@ function createRelatedPosts(i) {
 
 // Function for setting up the favorite hearts
 function createFavoriteHeart(i) {
-    let checkFavorite = favoriteArray.indexOf(postArray[i].id);
+    let checkFavorite = initialStates.favoriteArray.indexOf(initialStates.postArray[i].id);
     if (storageAvailable('localStorage') && checkFavorite !== -1) { //If local storage is available and post is a favorite...
         favoriteHeart = `<div class="favorite"><i class="far fa-heart fas"></i></div>`;
     } else if (storageAvailable('localStorage')) { // ...else
@@ -73,16 +83,16 @@ function createFavoriteHeart(i) {
 // Function for creating the star ratings for each movie
 function createStarRating(i) {
     let constructedHTML = '<div class="stars">';
-    let rating = Math.round(postArray[i].rating); // Get the rating integer
-    for (j = 2; j <= rating; j += 2) {
+    let rating = Math.round(initialStates.postArray[i].rating); // Get the rating integer
+    for (j = 2; j <= rating; j += 2) { // Get number of filled stars
         constructedHTML += `<i class="fas fa-star"></i>`;
     }
-    if (rating % 2 != 0) {
+    if (rating % 2 != 0) { // If there is a half star
         constructedHTML += `<i class="fas fa-star-half-alt"></i>`;
     }
     let remainingStars = 10 - rating;
     if (remainingStars >= 2) {
-        for (k = 2; k <= 10 - rating; k += 2) {
+        for (k = 2; k <= 10 - rating; k += 2) { // If there are empty stars
             constructedHTML += `<i class="far fa-star"></i>`;
         }
     }
@@ -92,17 +102,17 @@ function createStarRating(i) {
 
 // Function for creating the posts
 function createPosts() {
-    if (arrayLength < 1) { // check if no posts was found
+    if (initialStates.arrayLength < 1) { // check if no posts was found
         let errorMessage = `Hoppsan, vi hittade ingen film som matchade din sökning. Försök gärna igen!`;
-        errorField.insertAdjacentHTML('beforeend', errorMessage);
+        domElements.errorField.insertAdjacentHTML('beforeend', errorMessage);
     } else {
-        if ((postCounter + 10) >= arrayLength) { // if less than 10 posts left...
-            addCount = arrayLength;
+        if ((initialStates.postCounter + 10) >= initialStates.arrayLength) { // if less than 10 posts left...
+            addCount = initialStates.arrayLength;
             document.querySelector("#loadButton").disabled = "true";
         } else {
-            addCount = postCounter + 10; // ...else set the counter to 10
+            addCount = initialStates.postCounter + 10; // ...else set the counter to 10
         }
-        for (let i = postCounter; i < addCount; i += 1) { // loop the posts
+        for (let i = initialStates.postCounter; i < addCount; i += 1) { // loop the posts
 
             // Call function for creating related posts
             let alsoLiked = createRelatedPosts(i);
@@ -115,21 +125,21 @@ function createPosts() {
 
             // Create the post object
             let postObject = `
-            <div class="movie-container" data-id="${postArray[i].id}">
+            <div class="movie-container" data-id="${initialStates.postArray[i].id}">
             <div class="movie">
-            <img src="${postArray[i].poster}">
+            <img src="${initialStates.postArray[i].poster}">
             ${favoriteHeart}
-            <h2>${postArray[i].title}</h2>
+            <h2>${initialStates.postArray[i].title}</h2>
             ${fiveStars}
-            <p>${postArray[i].summary}</p>
+            <p>${initialStates.postArray[i].summary}</p>
             </div>
             <div class="also-liked" id="alsoLiked"><h5>Gillade du den här filmen? Då måste du kolla in dessa:</h5>
             ${alsoLiked.slice(0,2).join(' | ')}
             </div>
             </div>`;
-            postsContainer.insertAdjacentHTML('beforeend', postObject); // append the post object to the DOM
+            domElements.postsContainer.insertAdjacentHTML('beforeend', postObject); // append the post object to the DOM
         }
-        postCounter = postCounter + 10; // add to counter for pagination
+        initialStates.postCounter = initialStates.postCounter + 10; // add to counter for pagination
     }
 }
 
@@ -137,22 +147,22 @@ function createPosts() {
 async function fetchPosts(searchTerm) {
     const trendingMovies = await fetch(`https://javascriptst18.herokuapp.com/trending${searchTerm ? '?q=' + searchTerm : ""}`);
     const response = await trendingMovies.json();
-    postArray = response;
-    buttonContainer.innerHTML = "";
-    arrayLength = response.length;
-    if (arrayLength > 0) {
-        buttonContainer.innerHTML = loadButton;
+    initialStates.postArray = response;
+    domElements.buttonContainer.innerHTML = "";
+    initialStates.arrayLength = response.length;
+    if (initialStates.arrayLength > 0) {
+        domElements.buttonContainer.innerHTML = domElements.loadButton;
     }
     createPosts(); // run function for creating posts
 }
 
 // Function checking if post is a favorite or not
 function checkFavorite(favoriteId) {
-    let checkFavorite = favoriteArray.indexOf(favoriteId); // check if id exists in the array of favorites
+    let checkFavorite = initialStates.favoriteArray.indexOf(favoriteId); // check if id exists in the array of favorites
     if (checkFavorite !== -1) { // if it does...
-        favoriteArray.splice(checkFavorite, 1); // ...remove it from the array
+        initialStates.favoriteArray.splice(checkFavorite, 1); // ...remove it from the array
     } else {
-        favoriteArray.push(favoriteId); // else add it to the array
+        initialStates.favoriteArray.push(favoriteId); // else add it to the array
     }
 }
 
@@ -167,25 +177,56 @@ document.addEventListener('click', function (e) {
     if (e.target.classList.contains("fa-heart")) {
         e.target.classList.toggle("fas"); // toggle between filled and unfilled heart
         let favoriteId = e.target.parentElement.parentElement.parentElement.dataset.id; // get the id of the post
+        // check if the post is a favorite
         checkFavorite(favoriteId);
-        localStorage.setItem("favorites", JSON.stringify(favoriteArray)); // add the array to local storage as a string
+        localStorage.setItem("favorites", JSON.stringify(initialStates.favoriteArray)); // add the array to local storage as a string
     }
 });
 
 // listening for submit events on the form
-searchForm.addEventListener('submit', function (e) {
+domElements.searchForm.addEventListener('submit', function (e) {
     e.preventDefault();
     errorMessage.innerHTML = '';
-    postCounter = 0;
+    initialStates.postCounter = 0;
     let inputValue = this.querySelector("#searchTerm").value;
     if (inputValue) {
-        postsContainer.innerHTML = '';
+        domElements.postsContainer.innerHTML = '';
         fetchPosts(inputValue);
     } else {
-        postsContainer.innerHTML = '';
+        domElements.postsContainer.innerHTML = '';
         fetchPosts();
     }
     this.querySelector("#searchTerm").value = "";
+});
+
+// Function for fetching favorite posts from the API
+async function fetchPostsById(ids) {
+    let idString = ids.join('&id=');
+    const trendingMovies = await fetch(`https://javascriptst18.herokuapp.com/trending/?id=${idString}`);
+    const response = await trendingMovies.json();
+    initialStates.postArray = response;
+    domElements.buttonContainer.innerHTML = "";
+    initialStates.arrayLength = response.length;
+    if (initialStates.arrayLength > 0) {
+        domElements.buttonContainer.innerHTML = domElements.loadButton;
+    }
+    createPosts(); // run function for creating posts
+}
+
+let favoriteLink = document.querySelector('#favoriteLink');
+favoriteLink.addEventListener('click', function (e) {
+    e.preventDefault();
+    initialStates.postCounter = 0;
+    if (localStorage.getItem("favorites")) {
+        initialStates.favoriteArray = JSON.parse(localStorage.getItem("favorites"));
+        if (initialStates.favoriteArray.length > 0) {
+            domElements.postsContainer.innerHTML = '';
+            fetchPostsById(initialStates.favoriteArray);
+        } else {
+
+            domElements.header.insertAdjacentHTML('afterend', '<div class="header-error-message">Hoppsan, du har inte valt några favoriter! Klicka på lite hjärtan så kommer du igång!</div>');
+        }
+    }
 });
 
 

@@ -1,5 +1,7 @@
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 body {
@@ -8,12 +10,58 @@ body {
     color: #666;
 }
 
+header {
+    width: 100%;
+    background-color: #fff;
+    -webkit-box-shadow: 0px -4px 5px 5px rgba(0, 0, 0, 0.1);
+    -moz-box-shadow: 0px -4px 5px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0px -4px 5px 5px rgba(0, 0, 0, 0.1);
+}
+
+header .header-inner {
+    width: 1200px;
+    max-width: 96%;
+    margin: 0 auto 40px auto;
+    padding: 14px 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+nav {
+    margin-left: auto;
+    font-weight: 900;
+}
+
+nav i {
+    margin-right: 8px;
+    color: #ED3431;
+}
+
+nav a {
+    color: #666;
+    text-decoration: none;
+}
+
+nav a:hover {
+    text-decoration: underline;
+    color: #44bfdd;
+}
+
 h1 {
-    text-align: center;
-    font-size: 3rem;
+    text-align: left;
+    font-size: 36px;
     font-weight: 900;
     letter-spacing: -2px;
-    margin: 40px 0 60px 0;
+    margin: 0;
+    text-transform: uppercase;
+    line-height: 0.8 !important;
+}
+
+h1 span {
+    display: block;
+    font-size: 31px;
+    color: #44bfdd;
 }
 
 h1,
@@ -26,6 +74,7 @@ h4 {
 
 h2 {
     margin-bottom: 0;
+    margin-top: .8em;
 }
 
 h4 {
@@ -54,7 +103,7 @@ input[type="text"] {
 }
 
 form button {
-    margin: 20px auto 0 auto;
+    margin: 20px auto 20px auto;
 }
 
 .search-form {
@@ -137,7 +186,7 @@ label {
 }
 
 button {
-    background-color: #3a90a5;
+    background-color: #44bfdd;
     color: #fff;
     border-radius: 5px;
     font-size: 2rem;
@@ -162,6 +211,7 @@ button:disabled:hover {
 
 .error-message {
     color: red;
+    margin-bottom: 20px;
 }
 
 .also-liked {
